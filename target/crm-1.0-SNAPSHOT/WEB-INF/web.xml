@@ -49,4 +49,14 @@
         <!--让项目下的所用的路径都进行过滤-->
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+
+    <!--没有利用框架配置jsp的过滤器，防止恶意登录-->
+    <filter>
+        <filter-name>FilterJSP</filter-name>
+        <filter-class>com.gy.crm.filter.FilterJSP</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>FilterJSP</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
 </web-app>

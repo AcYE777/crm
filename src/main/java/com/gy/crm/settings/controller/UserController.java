@@ -1,7 +1,5 @@
 package com.gy.crm.settings.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gy.crm.settings.entity.User;
 import com.gy.crm.settings.service.UserService;
 import com.gy.crm.utils.MD5Util;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.rmi.MarshalledObject;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +21,7 @@ public class UserController {
     private UserService userService;
 
     //处理首页登录请求
-    @RequestMapping(value = "/login.do",method = RequestMethod.POST)
+    @RequestMapping(value = "/login.do",method = RequestMethod.GET)
     @ResponseBody
     public Map<String,Object> login(HttpServletRequest request, HttpServletResponse response){
         String loginAct = request.getParameter("loginAct");

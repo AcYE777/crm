@@ -9,6 +9,7 @@
     </settings>
     <typeAliases>
         <package name="com.gy.crm.settings.entity"/>
+        <package name="com.gy.crm.workbench.entity"/>
     </typeAliases>
     <!-- 映射器：指定映射文件或者映射类 -->
     <mappers>

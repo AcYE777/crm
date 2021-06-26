@@ -15,8 +15,8 @@
         <property name="dataSource" ref="myDataSource"></property>
         <property name="configLocation" value="classpath:mybatis.xml"></property>
     </bean>
-    <bean id="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <bean id="mapperScannerConfigurer1" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
-        <property name="basePackage" value="com.gy.crm.settings.dao"></property>
+        <property name="basePackage" value="com.gy.crm"></property>
     </bean>
 </beans>

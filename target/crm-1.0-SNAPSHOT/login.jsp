@@ -13,6 +13,11 @@ request.getServerPort()+request.getContextPath()+"/";
 <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 	<script type="text/javascript">
 		$(function() {
+			//判断登录页面是否是顶级窗口
+			if(window.top != window) {
+				window.top = window.location;
+			}
+
 			$("#loginAct").val("");
 			$("#loginPwd").val("");
 			$("#loginAct").focus();
@@ -37,12 +42,12 @@ request.getServerPort()+request.getContextPath()+"/";
 			$.ajax({
 				url:"settings/user/login.do",
 				data:{"loginAct":loginAct,"loginPwd":loginPwd},
-				type:"post",
+				type:"get",
 				dataType:"json",
 				success:function (resp) {
 					//拿到的数据可能是登录成功或者登录失败{success:true/false,msg:value}
 					if(resp.success) {
-						document.location.href = "workbench/index.html";
+						document.location.href = "workbench/index.jsp";
 					}else {
 						$("#msg").html(resp.msg);
 					}
@@ -69,7 +74,7 @@ request.getServerPort()+request.getContextPath()+"/";
 				<h1>登录</h1>
 			</div>
 
-			<form action="workbench/index.html" class="form-horizontal" role="form">
+			<form action="workbench/index.jsp" class="form-horizontal" role="form">
 				<div class="form-group form-group-lg">
 					<div style="width: 350px;">
 						<input class="form-control" id="loginAct" name="loginAct" type="text" placeholder="用户名">
