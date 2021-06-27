@@ -11,12 +11,13 @@ request.getServerPort()+request.getContextPath()+"/";
 
 <link href="jquery/bootstrap_3.3.0/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
 <link href="jquery/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" type="text/css" rel="stylesheet" />
-
+<link rel="stylesheet" type="text/css" href="jquery/bs_pagination/jquery.bs_pagination.min.css">
 <script type="text/javascript" src="jquery/jquery-1.11.1-min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap_3.3.0/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 <script type="text/javascript" src="jquery/bootstrap-datetimepicker-master/locale/bootstrap-datetimepicker.zh-CN.js"></script>
-
+<script type="text/javascript" src="jquery/bs_pagination/jquery.bs_pagination.min.js"></script>
+<script type="text/javascript" src="jquery/bs_pagination/en.js"></script>
 <script type="text/javascript">
 
 	$(function(){
@@ -42,7 +43,8 @@ request.getServerPort()+request.getContextPath()+"/";
 		});
 
 		$("#addCreate").click(function(){
-			
+			//reset方法jquery不供但是idea提示了，需要换成dom来调用
+			$("#modalForm")[0].reset();
 			$.ajax({
 				url:"workbench/activity/queryUser.do",
 				type:"get",
@@ -65,8 +67,6 @@ request.getServerPort()+request.getContextPath()+"/";
 		})
 
 		$("#saveBtn").click(function(){
-			//reset方法jquery不供但是idea提示了，需要换成dom来调用
-			$("#modalForm")[0].reset();
 			//点击保存按钮获取用户的输入利用ajax发送请求
 			var owner = $.trim($("#create-owner").val());
 			var name = $.trim($("#create-name").val());
@@ -74,7 +74,6 @@ request.getServerPort()+request.getContextPath()+"/";
 			var endDate = $.trim($("#create-endDate").val());
 			var cost = $.trim($("#create-cost").val());
 			var description = $.trim($("#create-description").val());
-
 			$.ajax({
 				url:"workbench/activity/save.do",
 				data:{"owner":owner,"name":name,"startDate":startDate,"endDate":endDate,"cost":cost,"description":description},
@@ -83,8 +82,8 @@ request.getServerPort()+request.getContextPath()+"/";
 				success:function(json) {
 					if(json.success) {
 						//成功后先刷新列表然后关闭模态窗口
-
-
+						//调用分页进行展示最新的数据
+						pageList(1,2);
 						$("#createActivityModal").modal("hide");
 					}else {
 						alert("添加失败");
@@ -92,8 +91,166 @@ request.getServerPort()+request.getContextPath()+"/";
 				}
 			})
 		})
-		
+		//页面加载完后也需要进行展示最新的数据
+		pageList(1,2);
+		//点击查询需要刷新
+		$("#submitBtn").click(function() {
+			//在每一次的查询中将文本内容保存到隐藏域中
+			var name = $.trim($("#search-name").val());
+			var owner = $.trim($("#search-owner").val());
+			var startDate = $.trim($("#search-startDate").val());
+			var endDate = $.trim($("#search-ende").val());
+			name = $("#search-hiddenName").val(name)
+			owner = $("#search-hiddenOwner").val(owner)
+			startDate = $("#search-hiddenStartDate").val(startDate)
+			endDate = $("#search-hiddenEndDate").val(endDate)
+			pageList(1,2);
+		})
+		//复选框操作-全选操作
+		$("#allCheckBox").click(function(){
+			$("input[name='subCheckBox']").prop("checked",this.checked)
+		})
+		//动态生成的标签不能必须利用on来绑定事件
+		$("#td").on("click",$("input[name='subCheckBox']"),function(){
+			$("#allCheckBox").prop("checked",$("input[name='subCheckBox']:checked").length == $("input[name='subCheckBox']").length);
+		})
+
+		//删除操作
+		$("#deleteBtn").click(function() {
+
+			var $checkedObj = $("input[name='subCheckBox']:checked");
+			if($checkedObj.length == 0) {
+				alert("请选择要删除的内容");
+				return;
+			}
+			var html = "";
+			$.each($checkedObj,function(i,n){
+				//遍历jquery数组将id进行拼接
+				html += n.value;
+				if(i != $checkedObj.length - 1) {
+					html += "&";
+				}
+			})
+			if(window.confirm("您确定要删除?")) {
+				$.ajax({
+					url:"workbench/activity/deleteActivity.do",
+					data:{"activityId":html},
+					type:"get",
+					dataType:"json",
+					success: function(data){
+						//{success:true/false}
+						if(data.success) {
+							alert("删除成功");
+							//删除后刷新列表
+							pageList(1,2);
+						}else {
+							alert("删除失败")
+						}
+					}
+
+				})
+			}
+		})
+		$("#editBtn").click(function(){
+			var $checkedBox = $("input[name='subCheckBox']:checked")
+			if($checkedBox.length == 0) {
+				alert("请选择要修改的内容");
+				return;
+			}
+			if($checkedBox.length > 1) {
+				alert("当前只能选择一项修改");
+				return;
+			}
+			//说明可以进行修改
+			var actid = $("input[name='subCheckBox']:checked").val();
+			$.ajax({
+				url:"workbench/activity/queryUserAndActivity.do",
+				data:{"actid":actid},
+				type:"get",
+				dataType:"json",
+				success:function(data) {
+					//{activity:对象,list:用户list列表}
+					/**
+					 * <option>zhangsan</option>
+					 	<option>lisi</option>
+					 	<option>wangwu</option>
+					 */
+					var html ="";
+					$.each(data.list,function(i,n) {
+						html += "<option>"+n.name+"</option>";
+					})
+					$("#edit-owner").html(html);
+					$("#edit-name").val(data.activity.name);
+					$("#edit-cost").val(data.activity.cost);
+					$("#edit-startDate").val(data.activity.startDate);
+					$("#edit-endDate").val(data.activity.endDate);
+					$("#edit-description").val(data.activity.description);
+					//展示模态窗口
+					$("#editActivityModal").modal("show");
+				}
+
+			})
+		})
 	});
+	//页面刷新展示最新数据函数，哪里需要用在哪里调用
+	function pageList(pageNo,pageSize) {
+		//在每次查询的过程中将从隐藏域中取出数据再进行查询，这样避免没有点击查询按钮点击换页将其先前的条件覆盖掉
+		var name = $("#search-hiddenName").val()
+		var owner = $("#search-hiddenOwner").val()
+		var startDate = $("#search-hiddenStartDate").val()
+		var endDate = $("#search-hiddenEndDate").val()
+		$("#search-name").val(name)
+		$("#search-owner").val(owner)
+		$("#search-startDate").val(startDate)
+		$("#search-ende").val(endDate)
+		$.ajax({
+			url:"workbench/activity/pageList.do",
+			data:{"name":name,"owner":owner,"startDate":startDate,"endDate":endDate,
+				"pageNo":pageNo,"pageSize":pageSize},
+			type:"get",
+			dataType:"json",
+			success:function(data) {
+				//{total:xxx,list:{{xxx:xxx},{xxx:xxx},{xxx:xxx}}}
+				/**
+				 * <tr class="active">
+				 	<td><input type="checkbox" /></td>
+				 	<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">发传单</a></td>
+				 	<td>zhangsan</td>
+				 	<td>2020-10-10</td>
+				 	<td>2020-10-20</td>
+				   </tr>
+				 */
+				var total = data.total;//总记录条数
+				var html="";
+				$.each(data.list,function(i,n){
+					html +='<tr class="active">'
+					html +='	<td><input type="checkbox" name="subCheckBox" value="'+ n.id +'"/></td> '
+					html +='	<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href=\'detail.jsp\';">'+ n.name+'</a></td>'
+					html +='	<td>'+n.owner+'</td>'
+					html +='	<td>'+ n.startDate+'</td>'
+					html +='	<td>'+n.endDate+'</td>'
+					html +='</tr>'
+				})
+				$("#td").html(html);
+				//处理分页
+				$("#activityPage").bs_pagination({
+					currentPage: pageNo, // 页码
+					rowsPerPage: pageSize, // 每页显示的记录条数
+					maxRowsPerPage: 20, // 每页最多显示的记录条数
+					totalPages: total % pageSize == 0 ? total / pageSize : Math.floor(total / pageSize) + 1, // 总页数
+					totalRows: total, // 总记录条数
+					visiblePageLinks: 3, // 显示几个卡片
+					showGoToPage: true,
+					showRowsPerPage: true,
+					showRowsInfo: true,
+					showRowsDefaultInfo: true,
+					onChangePage : function(event, data){
+						pageList(data.currentPage , data.rowsPerPage);
+					}
+				});
+			}
+		})
+	}
 	
 </script>
 </head>
@@ -178,28 +335,28 @@ request.getServerPort()+request.getContextPath()+"/";
 					<form class="form-horizontal" role="form">
 					
 						<div class="form-group">
-							<label for="edit-marketActivityOwner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
+							<label for="edit-owner" class="col-sm-2 control-label">所有者<span style="font-size: 15px; color: red;">*</span></label>
 							<div class="col-sm-10" style="width: 300px;">
-								<select class="form-control" id="edit-marketActivityOwner">
+								<select class="form-control" id="edit-owner">
 								  <option>zhangsan</option>
 								  <option>lisi</option>
 								  <option>wangwu</option>
 								</select>
 							</div>
-                            <label for="edit-marketActivityName" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
+                            <label for="edit-name" class="col-sm-2 control-label">名称<span style="font-size: 15px; color: red;">*</span></label>
                             <div class="col-sm-10" style="width: 300px;">
-                                <input type="text" class="form-control" id="edit-marketActivityName" value="发传单">
+                                <input type="text" class="form-control" id="edit-name" value="发传单">
                             </div>
 						</div>
 
 						<div class="form-group">
-							<label for="edit-startTime" class="col-sm-2 control-label">开始日期</label>
+							<label for="edit-startDate" class="col-sm-2 control-label">开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-startTime" value="2020-10-10">
+								<input type="text" class="form-control" id="edit-startDate" value="2020-10-10">
 							</div>
-							<label for="edit-endTime" class="col-sm-2 control-label">结束日期</label>
+							<label for="edit-endDate" class="col-sm-2 control-label">结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-endTime" value="2020-10-20">
+								<input type="text" class="form-control" id="edit-endDate" value="2020-10-20">
 							</div>
 						</div>
 						
@@ -211,9 +368,9 @@ request.getServerPort()+request.getContextPath()+"/";
 						</div>
 						
 						<div class="form-group">
-							<label for="edit-describe" class="col-sm-2 control-label">描述</label>
+							<label for="edit-description" class="col-sm-2 control-label">描述</label>
 							<div class="col-sm-10" style="width: 81%;">
-								<textarea class="form-control" rows="3" id="edit-describe">市场活动Marketing，是指品牌主办或参与的展览会议与公关市场活动，包括自行主办的各类研讨会、客户交流会、演示会、新产品发布会、体验会、答谢会、年会和出席参加并布展或演讲的展览会、研讨会、行业交流会、颁奖典礼等</textarea>
+								<textarea class="form-control" rows="3" id="edit-description">市场活动Marketing，是指品牌主办或参与的展览会议与公关市场活动，包括自行主办的各类研讨会、客户交流会、演示会、新产品发布会、体验会、答谢会、年会和出席参加并布展或演讲的展览会、研讨会、行业交流会、颁奖典礼等</textarea>
 							</div>
 						</div>
 						
@@ -247,14 +404,16 @@ request.getServerPort()+request.getContextPath()+"/";
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">名称</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="search-name">
+						<input type="hidden" id="search-hiddenName">
 				    </div>
 				  </div>
 				  
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">所有者</div>
-				      <input class="form-control" type="text">
+				      <input class="form-control" type="text" id="search-owner">
+						<input type="hidden" id="search-hiddenOwner">
 				    </div>
 				  </div>
 
@@ -262,25 +421,27 @@ request.getServerPort()+request.getContextPath()+"/";
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">开始日期</div>
-					  <input class="form-control" type="text" id="startTime" />
-				    </div>
+					  <input class="form-control time" type="text" id="search-startDate" readonly/>
+						<input type="hidden" id="search-hiddenStartDate">
+					</div>
 				  </div>
 				  <div class="form-group">
 				    <div class="input-group">
 				      <div class="input-group-addon">结束日期</div>
-					  <input class="form-control" type="text" id="endTime">
+					  <input class="form-control time" type="text" id="search-endDate" readonly>
+						<input type="hidden" id="search-hiddenEndDate">
 				    </div>
 				  </div>
 				  
-				  <button type="submit" class="btn btn-default">查询</button>
+				  <button type="button" class="btn btn-default" id="submitBtn">查询</button>
 				  
 				</form>
 			</div>
 			<div class="btn-toolbar" role="toolbar" style="background-color: #F7F7F7; height: 50px; position: relative;top: 5px;">
 				<div class="btn-group" style="position: relative; top: 18%;">
 				  <button type="button" class="btn btn-primary" id="addCreate"><span class="glyphicon glyphicon-plus"></span> 创建</button>
-				  <button type="button" class="btn btn-default" data-toggle="modal" data-target="#editActivityModal"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
-				  <button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-minus"></span> 删除</button>
+				  <button type="button" class="btn btn-default" id="editBtn"><span class="glyphicon glyphicon-pencil"></span> 修改</button>
+				  <button type="button" class="btn btn-danger" id="deleteBtn"><span class="glyphicon glyphicon-minus"></span> 删除</button>
 				</div>
 				
 			</div>
@@ -288,65 +449,35 @@ request.getServerPort()+request.getContextPath()+"/";
 				<table class="table table-hover">
 					<thead>
 						<tr style="color: #B3B3B3;">
-							<td><input type="checkbox" /></td>
+							<td><input type="checkbox" id="allCheckBox"/></td>
 							<td>名称</td>
                             <td>所有者</td>
 							<td>开始日期</td>
 							<td>结束日期</td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr class="active">
-							<td><input type="checkbox" /></td>
-							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">发传单</a></td>
-                            <td>zhangsan</td>
-							<td>2020-10-10</td>
-							<td>2020-10-20</td>
-						</tr>
-                        <tr class="active">
-                            <td><input type="checkbox" /></td>
-                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">发传单</a></td>
-                            <td>zhangsan</td>
-                            <td>2020-10-10</td>
-                            <td>2020-10-20</td>
-                        </tr>
+					<tbody id="td">
+<%--						<tr class="active">--%>
+<%--							<td><input type="checkbox" /></td>--%>
+<%--							<td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">发传单</a></td>--%>
+<%--                            <td>zhangsan</td>--%>
+<%--							<td>2020-10-10</td>--%>
+<%--							<td>2020-10-20</td>--%>
+<%--						</tr>--%>
+<%--                        <tr class="active">--%>
+<%--                            <td><input type="checkbox" /></td>--%>
+<%--                            <td><a style="text-decoration: none; cursor: pointer;" onclick="window.location.href='detail.jsp';">发传单</a></td>--%>
+<%--                            <td>zhangsan</td>--%>
+<%--                            <td>2020-10-10</td>--%>
+<%--                            <td>2020-10-20</td>--%>
+<%--                        </tr>--%>
 					</tbody>
 				</table>
 			</div>
 			
 			<div style="height: 50px; position: relative;top: 30px;">
-				<div>
-					<button type="button" class="btn btn-default" style="cursor: default;">共<b>50</b>条记录</button>
-				</div>
-				<div class="btn-group" style="position: relative;top: -34px; left: 110px;">
-					<button type="button" class="btn btn-default" style="cursor: default;">显示</button>
-					<div class="btn-group">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-							10
-							<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="#">20</a></li>
-							<li><a href="#">30</a></li>
-						</ul>
-					</div>
-					<button type="button" class="btn btn-default" style="cursor: default;">条/页</button>
-				</div>
-				<div style="position: relative;top: -88px; left: 285px;">
-					<nav>
-						<ul class="pagination">
-							<li class="disabled"><a href="#">首页</a></li>
-							<li class="disabled"><a href="#">上一页</a></li>
-							<li class="active"><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
-							<li><a href="#">下一页</a></li>
-							<li class="disabled"><a href="#">末页</a></li>
-						</ul>
-					</nav>
-				</div>
+				<div id="activityPage"></div>
+			</div>
 			</div>
 			
 		</div>

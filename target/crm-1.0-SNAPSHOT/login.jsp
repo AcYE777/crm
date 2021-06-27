@@ -15,7 +15,7 @@ request.getServerPort()+request.getContextPath()+"/";
 		$(function() {
 			//判断登录页面是否是顶级窗口
 			if(window.top != window) {
-				window.top = window.location;
+				window.top.location = window.location;
 			}
 
 			$("#loginAct").val("");

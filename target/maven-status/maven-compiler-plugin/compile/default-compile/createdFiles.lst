@@ -1,6 +1,7 @@
 com\gy\crm\filter\FilterPointDo.class
 com\gy\crm\workbench\dao\ActivityDao.class
 com\gy\crm\utils\MD5Util.class
+com\gy\crm\workbench\dao\ActivityRemarkDao.class
 com\gy\crm\filter\FilterJSP.class
 com\gy\crm\settings\controller\UserController.class
 com\gy\crm\settings\dao\UserDao.class
@@ -10,6 +11,7 @@ com\gy\crm\settings\exception\loginException.class
 com\gy\crm\workbench\entity\ActivityRemark.class
 com\gy\crm\settings\entity\User.class
 com\gy\crm\workbench\entity\Activity.class
+com\gy\crm\vo\PageListVo.class
 com\gy\crm\settings\handle\GlobalExcepHandle.class
 com\gy\crm\utils\DateTimeUtil.class
 com\gy\crm\workbench\controller\ActivityController.class

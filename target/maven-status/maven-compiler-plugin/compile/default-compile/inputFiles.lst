@@ -1,4 +1,5 @@
 D:\maven\workSpaceForCrm\crm\src\main\java\com\gy\crm\workbench\entity\ActivityRemark.java
+D:\maven\workSpaceForCrm\crm\src\main\java\com\gy\crm\workbench\dao\ActivityRemarkDao.java
 D:\maven\workSpaceForCrm\crm\src\main\java\com\gy\crm\settings\controller\UserController.java
 D:\maven\workSpaceForCrm\crm\src\main\java\com\gy\crm\utils\UUIDUtil.java
 D:\maven\workSpaceForCrm\crm\src\main\java\com\gy\crm\workbench\dao\ActivityDao.java
@@ -12,6 +13,7 @@ D:\maven\workSpaceForCrm\crm\src\main\java\com\gy\crm\workbench\entity\Activity.
 D:\maven\workSpaceForCrm\crm\src\main\java\com\gy\crm\settings\dao\UserDao.java
 D:\maven\workSpaceForCrm\crm\src\main\java\com\gy\crm\filter\FilterPointDo.java
 D:\maven\workSpaceForCrm\crm\src\main\java\com\gy\crm\settings\handle\GlobalExcepHandle.java
+D:\maven\workSpaceForCrm\crm\src\main\java\com\gy\crm\vo\PageListVo.java
 D:\maven\workSpaceForCrm\crm\src\main\java\com\gy\crm\utils\MD5Util.java
 D:\maven\workSpaceForCrm\crm\src\main\java\com\gy\crm\settings\service\impl\UserServiceImpl.java
 D:\maven\workSpaceForCrm\crm\src\main\java\com\gy\crm\utils\DateTimeUtil.java
