@@ -83,7 +83,8 @@ request.getServerPort()+request.getContextPath()+"/";
 					if(json.success) {
 						//成功后先刷新列表然后关闭模态窗口
 						//调用分页进行展示最新的数据
-						pageList(1,2);
+						//pageList(1,2);
+						pageList(1,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
 						$("#createActivityModal").modal("hide");
 					}else {
 						alert("添加失败");
@@ -142,7 +143,8 @@ request.getServerPort()+request.getContextPath()+"/";
 						if(data.success) {
 							alert("删除成功");
 							//删除后刷新列表
-							pageList(1,2);
+							//pageList(1,2);
+							pageList(1,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
 						}else {
 							alert("删除失败")
 						}
@@ -177,7 +179,7 @@ request.getServerPort()+request.getContextPath()+"/";
 					 */
 					var html ="";
 					$.each(data.list,function(i,n) {
-						html += "<option>"+n.name+"</option>";
+						html += "<option value="+ n.id +">"+n.name+"</option>";
 					})
 					$("#edit-owner").html(html);
 					$("#edit-name").val(data.activity.name);
@@ -186,9 +188,41 @@ request.getServerPort()+request.getContextPath()+"/";
 					$("#edit-endDate").val(data.activity.endDate);
 					$("#edit-description").val(data.activity.description);
 					//展示模态窗口
+					//在模态窗口打开的时候给隐藏域hiddenActId赋值,目的是得到活动的id为了进行修改这项活动
+					$("#hiddenActId").val(actid);
 					$("#editActivityModal").modal("show");
 				}
 
+			})
+		})
+		$("#updateBtn").click(function(){
+			var owner = $("#edit-owner").val()//获取所有者下拉表选中的内容
+			var name = $("#edit-name").val();
+			var cost = $("#edit-cost").val();
+			var startDate = $("#edit-startDate").val();
+			var endDate = $("#edit-endDate").val();
+			var description = $("#edit-description").val();
+			var id = $("#hiddenActId").val();
+			$.ajax({
+				url:"workbench/activity/updateActivity.do",
+				data:{"owner":owner,"name":name,"cost":cost,"startDate":startDate,"endDate":endDate,
+					"description":description,"id":id},
+				type:"get",
+				dataType:"json",
+				success:function(data) {
+					//返回{success:true/false}
+					if(data.success) {
+						alert("修改成功");
+						//关闭模态窗口
+						//pageList(1,2);
+						//停留在本页
+						pageList($("#activityPage").bs_pagination('getOption', 'currentPage')
+								,$("#activityPage").bs_pagination('getOption', 'rowsPerPage'));
+						$("#editActivityModal").modal("hide");
+					}else {
+						alert("修改失败");
+					}
+				}
 			})
 		})
 	});
@@ -321,6 +355,8 @@ request.getServerPort()+request.getContextPath()+"/";
 	</div>
 	
 	<!-- 修改市场活动的模态窗口 -->
+	<!--创建一个隐藏域保存选中活动的id-->
+	<input type="hidden" id="hiddenActId"/>
 	<div class="modal fade" id="editActivityModal" role="dialog">
 		<div class="modal-dialog" role="document" style="width: 85%;">
 			<div class="modal-content">
@@ -352,11 +388,11 @@ request.getServerPort()+request.getContextPath()+"/";
 						<div class="form-group">
 							<label for="edit-startDate" class="col-sm-2 control-label">开始日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-startDate" value="2020-10-10">
+								<input type="text" class="form-control time" id="edit-startDate" value="2020-10-10" readonly>
 							</div>
 							<label for="edit-endDate" class="col-sm-2 control-label">结束日期</label>
 							<div class="col-sm-10" style="width: 300px;">
-								<input type="text" class="form-control" id="edit-endDate" value="2020-10-20">
+								<input type="text" class="form-control time" id="edit-endDate" value="2020-10-20" readonly>
 							</div>
 						</div>
 						
@@ -379,7 +415,7 @@ request.getServerPort()+request.getContextPath()+"/";
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal">更新</button>
+					<button type="button" class="btn btn-primary" id="updateBtn">更新</button>
 				</div>
 			</div>
 		</div>

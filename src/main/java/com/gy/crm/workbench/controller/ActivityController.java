@@ -5,6 +5,7 @@ import com.gy.crm.vo.PageListVo;
 import com.gy.crm.workbench.entity.Activity;
 import com.gy.crm.workbench.service.ActivityService;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -70,9 +71,20 @@ public class ActivityController {
         return map;
     }
 
-    @RequestMapping("/queryUserAndActivity.do")
+    @RequestMapping(value = "/queryUserAndActivity.do",method = RequestMethod.GET)
     @ResponseBody
     public Map<String,Object> queryUserAndActivity(HttpServletRequest request) {
-        return new HashMap<>();
+        System.out.println("controller修改执行");
+        String actid = request.getParameter("actid");
+        Map<String,Object> map = as.queryUserAndActivity(actid);
+        return map;
+    }
+
+    @RequestMapping("/updateActivity.do")
+    @ResponseBody
+    public Map<String,Object> updateActivity(Activity activity) {
+        System.out.println("修改开始controller");
+        Map<String,Object> map = as.updateActivity(activity);
+        return map;
     }
 }

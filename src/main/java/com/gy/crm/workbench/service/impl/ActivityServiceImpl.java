@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.DataFormatException;
@@ -75,4 +76,59 @@ public class ActivityServiceImpl implements ActivityService {
         }
         return false;
     }
+
+    @Override
+    public Map<String, Object> queryUserAndActivity(String actid) {
+        Activity activity = ad.queryByActID(actid);
+        List<User> list = userDao.queryUser();
+        Map<String,Object> map = new HashMap<>();
+        map.put("activity",activity);
+        map.put("list",list);
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> updateActivity(Activity activity) {
+        System.out.println("修改开始controller");
+        Map<String,Object> map = new HashMap<>();
+        int count = ad.updateActivity(activity);
+        if(count > 0) {
+            map.put("success",true);
+        }else {
+            map.put("success",false);
+        }
+        return map;
+    }
 }
+class ListNode {
+    int val;
+    ListNode next;
+    ListNode() {}
+    ListNode(int val) { this.val = val; }
+    ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+}
+class Solution {
+    ListNode post = null;
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+        if(left == 1) {
+            //若left==1,问题就变成了反转前n个节点了
+            ListNode last = reverseN(head,right);
+            return last;
+        }
+        //left不等于1那么
+        head.next = reverseBetween(head.next,left - 1,right - 1);
+        return head;
+    }
+    //反转前n个节点
+    public ListNode reverseN(ListNode head,int n) {
+        if(n == 1) {
+            post = head.next;
+            return head;
+        }
+        ListNode last = reverseN(head.next,n-1);
+        head.next.next = head;
+        head.next = post;
+        return last;
+    }
+}
+

@@ -15,4 +15,8 @@ public interface ActivityService {
     PageListVo<Activity> pageList(Map<String, Object> map);
 
     boolean deleteActivity(String[] actId);
+
+    Map<String, Object> queryUserAndActivity(String actid);
+
+    Map<String, Object> updateActivity(Activity activity);
 }

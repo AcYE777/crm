@@ -56,5 +56,31 @@
             #{id}
         </foreach>
     </delete>
-
+    <select id="queryByActID" resultType="Activity">
+        select * from tbl_activity where id = #{aid}
+    </select>
+    <update id="updateActivity">
+        update tbl_activity
+        <set>
+            <if test="owner != null and owner !=''">
+                owner=#{owner},
+            </if>
+            <if test="name != null and name !=''">
+                name=#{name},
+            </if>
+            <if test="startDate != null and startDate !=''">
+                startDate=#{startDate},
+            </if>
+            <if test="endDate != null and endDate !=''">
+                endDate=#{endDate},
+            </if>
+            <if test="cost != null and cost !=''">
+                cost=#{cost},
+            </if>
+            <if test="description != null and description !=''">
+                description=#{description},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
 </mapper>

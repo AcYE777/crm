@@ -11,4 +11,5 @@ public interface UserDao {
                @Param("loginPwd")String loginPwd);
 
     List<User> queryUser();
+
 }
