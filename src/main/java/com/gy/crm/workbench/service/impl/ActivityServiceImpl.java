@@ -99,36 +99,63 @@ public class ActivityServiceImpl implements ActivityService {
         }
         return map;
     }
-}
-class ListNode {
-    int val;
-    ListNode next;
-    ListNode() {}
-    ListNode(int val) { this.val = val; }
-    ListNode(int val, ListNode next) { this.val = val; this.next = next; }
-}
-class Solution {
-    ListNode post = null;
-    public ListNode reverseBetween(ListNode head, int left, int right) {
-        if(left == 1) {
-            //若left==1,问题就变成了反转前n个节点了
-            ListNode last = reverseN(head,right);
-            return last;
-        }
-        //left不等于1那么
-        head.next = reverseBetween(head.next,left - 1,right - 1);
-        return head;
+
+    @Override
+    public Activity detail(String actid) {
+        System.out.println("detail--Service层开始执行");
+        Activity activity = ad.detail(actid);
+        System.out.println("detail-Service层执行结束");
+        return activity;
     }
-    //反转前n个节点
-    public ListNode reverseN(ListNode head,int n) {
-        if(n == 1) {
-            post = head.next;
-            return head;
-        }
-        ListNode last = reverseN(head.next,n-1);
-        head.next.next = head;
-        head.next = post;
-        return last;
+
+    @Override
+    public List<ActivityRemark> queryActivityRemarkInfo(String actid) {
+        System.out.println("查询备注信息开始Service");
+        List<ActivityRemark> activityRemark = ar.queryActivityRemarkInfo(actid);
+        System.out.println("查询备注信息结束Service");
+        return activityRemark;
+    }
+
+    @Override
+    public boolean addRemarkInfo(String remarkInfo, String curActId,User user) {
+        System.out.println("添加备注Service");
+        ActivityRemark ar = new ActivityRemark();
+        String id = UUIDUtil.getUUID();
+        String curTime = DateTimeUtil.getSysTime();
+        ar.setId(id);
+        ar.setNoteContent(remarkInfo);
+        ar.setCreateTime(curTime);
+        ar.setCreateBy(user.getName());
+        ar.setEditFlag("0");
+        ar.setActivityId(curActId);
+        int count = this.ar.addRemarkInfo(ar);
+        System.out.println("添加备注Service成功");
+        return count == 1;
+    }
+
+    @Override
+    public boolean deleteActivityRemark(String deleteActId) {
+        System.out.println("删除备注信息Service");
+        int count = this.ar.deleteActivityRemark(deleteActId);
+        System.out.println("删除备注信息Service结束");
+        return count == 1;
+    }
+
+    @Override
+    public ActivityRemark queryNoteContent(String updateActId) {
+        System.out.println("显示备注信息Service");
+        ActivityRemark activityRemark = ar.queryNoteContent(updateActId);
+        System.out.println("显示备注信息Service结束");
+        return activityRemark;
+    }
+
+    @Override
+    public boolean update(String noteContent,String actRemarkId) {
+        System.out.println("更新备注信息Service");
+        int count = ar.update(noteContent,actRemarkId);
+        System.out.println("更新备注信息Service结束");
+        return count == 1;
     }
 }
+
 

@@ -3,13 +3,17 @@ package com.gy.crm.workbench.controller;
 import com.gy.crm.settings.entity.User;
 import com.gy.crm.vo.PageListVo;
 import com.gy.crm.workbench.entity.Activity;
+import com.gy.crm.workbench.entity.ActivityRemark;
 import com.gy.crm.workbench.service.ActivityService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
@@ -85,6 +89,62 @@ public class ActivityController {
     public Map<String,Object> updateActivity(Activity activity) {
         System.out.println("修改开始controller");
         Map<String,Object> map = as.updateActivity(activity);
+        return map;
+    }
+    @RequestMapping("/detail.do")
+    @ResponseBody
+    public ModelAndView detail(String actid) {
+        System.out.println("detail开始执行");
+        ModelAndView mav = new ModelAndView();
+        Activity activity = as.detail(actid);
+        mav.addObject("activity",activity);
+        mav.setViewName("forward:/workbench/activity/detail.jsp");
+        return mav;
+    }
+    @RequestMapping(value = "/queryActivityRemarkInfo.do",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> queryActivityRemarkInfo(String actid) {
+        System.out.println("查询备注信息Controller");
+        List<ActivityRemark> activityRemark = as.queryActivityRemarkInfo(actid);
+        Map<String,Object> map = new HashMap<>();
+        map.put("activityRemark",activityRemark);
+        return map;
+    }
+    @RequestMapping(value = "/addRemarkInfo.do",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> addRemarkInfo(HttpServletRequest request) {
+        System.out.println("添加备注Controller");
+        String remarkInfo = request.getParameter("remarkInfo");
+        String curActId = request.getParameter("curActId");
+        User user = (User)request.getSession().getAttribute("user");
+        boolean success = as.addRemarkInfo(remarkInfo,curActId,user);
+        Map<String,Object> map = new HashMap<>();
+        map.put("success",success);
+        return map;
+    }
+    @RequestMapping(value = "/deleteRemarkInfo.do",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> deleteRemarkInfo(String deleteActId) {
+        System.out.println("删除备注信息Controller");
+        boolean success = as.deleteActivityRemark(deleteActId);
+        Map<String,Object> map = new HashMap<>();
+        map.put("success",success);
+        return map;
+    }
+    @RequestMapping(value = "/queryNoteContent.do",method = RequestMethod.POST)
+    @ResponseBody
+    public ActivityRemark queryNoteContent(String updateActId) {
+        System.out.println("显示备注信息Controller");
+        ActivityRemark activityRemark = as.queryNoteContent(updateActId);
+        return activityRemark;
+    }
+    @RequestMapping(value = "/update.do",method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String,Object> update(String noteContent,String actRemarkId) {
+        System.out.println("备注更新Controller");
+        boolean success = as.update(noteContent,actRemarkId);
+        Map<String,Object> map = new HashMap<>();
+        map.put("success",success);
         return map;
     }
 }

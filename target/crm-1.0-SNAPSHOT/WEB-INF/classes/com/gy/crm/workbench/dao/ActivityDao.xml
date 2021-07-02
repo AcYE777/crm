@@ -83,4 +83,73 @@
         </set>
         where id=#{id}
     </update>
+    <select id="detail" resultType="Activity">
+        select
+        a.id,
+        u.name as owner,
+        a.name,
+        a.startDate,
+        a.endDate,
+        a.cost,
+        a.description,
+        a.createTime,
+        a.createBy,
+        a.editTime,
+        a.editBy
+        from tbl_activity a
+        join tbl_user u
+        on a.owner = u.id
+        where a.id=#{actid}
+    </select>
+    <select id="showActivity" resultType="Activity">
+        select
+        tcar.id as id,
+        u.name as owner,
+        a.name,
+        a.startDate,
+        a.endDate,
+        a.cost,
+        a.description,
+        a.createTime,
+        a.createBy
+        from tbl_activity a
+        join tbl_clue_activity_relation tcar
+        on a.id=tcar.activityId
+        join tbl_user u
+        on a.owner=u.id
+        where tcar.clueId=#{clueId}
+    </select>
+
+    <select id="queryActivity" resultType="Activity">
+        select
+        a.id,
+        u.name as owner,
+        a.name,
+        a.startDate,
+        a.endDate
+        from tbl_activity a
+        join tbl_user u
+        on a.owner=u.id
+        where a.name like '%' #{activityInfo} '%' and a.id not in(
+            select
+            activityId
+            from
+            tbl_clue_activity_relation
+            where clueId=#{clueId}
+        )
+    </select>
+    <select id="searchActivityInfo" resultType="Activity">
+        select
+        a.id,
+        a.name,
+        u.name as owner,
+        a.startDate,
+        a.endDate,
+        a.cost,
+        a.description
+        from tbl_activity a
+        join tbl_user u
+        on a.owner=u.id
+        where a.name like '%' #{activityInfo} '%'
+    </select>
 </mapper>

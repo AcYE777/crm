@@ -28,6 +28,7 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+
     <filter>
         <filter-name>CharacterEncodingFilter</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -59,4 +60,8 @@
         <filter-name>FilterJSP</filter-name>
         <url-pattern>*.jsp</url-pattern>
     </filter-mapping>
+    <!--配置监听器服务器一启动就创建application上下文-->
+    <listener>
+        <listener-class>com.gy.crm.listener.ContextListener</listener-class>
+    </listener>
 </web-app>

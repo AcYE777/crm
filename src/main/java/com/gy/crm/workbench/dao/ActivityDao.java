@@ -18,4 +18,12 @@ public interface ActivityDao {
     Activity queryByActID(String actid);
 
     int updateActivity(Activity activity);
+
+    Activity detail(String actid);
+
+    List<Activity> showActivity(String clueId);
+
+    List<Activity> queryActivity(Map<String, String> map);
+
+    List<Activity> searchActivityInfo(String activityInfo);
 }

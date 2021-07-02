@@ -1,0 +1,13 @@
+package com.gy.crm.workbench.dao;
+
+import com.gy.crm.workbench.entity.Clue;
+
+import java.util.List;
+
+public interface ClueDao {
+    int addClue(Clue clue);
+
+    List<Clue> queryClue();
+
+    Clue detail(String clueId);
+}
