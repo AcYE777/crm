@@ -10,4 +10,8 @@ public interface ClueDao {
     List<Clue> queryClue();
 
     Clue detail(String clueId);
+
+    Clue searchClueById(String clueId);
+
+    int deleteByClueId(String clueId);
 }

@@ -11,6 +11,8 @@ com\gy\crm\workbench\dao\CustomerDao.class
 com\gy\crm\workbench\entity\ClueActivityRelation.class
 com\gy\crm\workbench\entity\Customer.class
 com\gy\crm\settings\service\impl\UserServiceImpl.class
+com\gy\crm\workbench\controller\CustomerController.class
+com\gy\crm\workbench\controller\TransactionController.class
 com\gy\crm\workbench\dao\ClueActivityRelationDao.class
 com\gy\crm\settings\entity\User.class
 com\gy\crm\workbench\entity\Tran.class
@@ -20,9 +22,11 @@ com\gy\crm\workbench\dao\TranHistoryDao.class
 com\gy\crm\workbench\entity\CustomerRemark.class
 com\gy\crm\settings\dao\DicValueDao.class
 com\gy\crm\settings\handle\GlobalExcepHandle.class
+com\gy\crm\workbench\service\CustomerService.class
 com\gy\crm\workbench\entity\Clue.class
 com\gy\crm\workbench\service\impl\ActivityServiceImpl.class
 com\gy\crm\workbench\service\ActivityService.class
+com\gy\crm\workbench\service\impl\CustomerServiceImpl.class
 com\gy\crm\settings\service\UserService.class
 com\gy\crm\workbench\controller\ClueController.class
 com\gy\crm\filter\FilterPointDo.class
@@ -40,9 +44,11 @@ com\gy\crm\workbench\entity\ActivityRemark.class
 com\gy\crm\workbench\dao\ContactsRemarkDao.class
 com\gy\crm\workbench\service\impl\ClueSerivceImpl.class
 com\gy\crm\workbench\entity\Activity.class
+com\gy\crm\workbench\service\impl\TransactionServiceImpl.class
 com\gy\crm\workbench\entity\ClueRemark.class
 com\gy\crm\workbench\service\ClueSerivce.class
 com\gy\crm\workbench\dao\ClueDao.class
+com\gy\crm\workbench\service\TransactionService.class
 com\gy\crm\settings\entity\DicType.class
 com\gy\crm\utils\DateTimeUtil.class
 com\gy\crm\workbench\controller\ActivityController.class

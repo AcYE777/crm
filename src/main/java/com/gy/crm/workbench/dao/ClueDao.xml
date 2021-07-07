@@ -74,7 +74,11 @@
         on c.owner = u.id
         where c.id = #{clueId}
     </select>
-
-
+    <select id="searchClueById" resultType="Clue">
+        select * from tbl_clue where id=#{clueId}
+    </select>
+    <delete id="deleteByClueId">
+        delete from tbl_clue where id=#{clueId}
+    </delete>
 
 </mapper>

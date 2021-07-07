@@ -4,6 +4,7 @@ import com.gy.crm.settings.entity.DicValue;
 import com.gy.crm.settings.entity.User;
 import com.gy.crm.workbench.entity.Activity;
 import com.gy.crm.workbench.entity.Clue;
+import com.gy.crm.workbench.entity.Tran;
 
 import java.util.List;
 import java.util.Map;
@@ -27,4 +28,6 @@ public interface ClueSerivce {
     boolean associateAct(Map<String, Object> map1);
 
     List<Activity> searchActivityInfo(String activityInfo);
+
+    boolean convert(String clueId, String createBy, Tran tran);
 }

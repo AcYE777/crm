@@ -20,7 +20,17 @@ public class Tran {
 	private String description;
 	private String contactSummary;	//联系纪要
 	private String nextContactTime;	//下次联系时间
-	
+	//添加可能性属性
+	private String possibility;
+
+	public String getPossibility() {
+		return possibility;
+	}
+
+	public void setPossibility(String possibility) {
+		this.possibility = possibility;
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -129,8 +139,28 @@ public class Tran {
 	public void setNextContactTime(String nextContactTime) {
 		this.nextContactTime = nextContactTime;
 	}
-	
-	
 
-	
+	@Override
+	public String toString() {
+		return "Tran{" +
+				"id='" + id + '\'' +
+				", owner='" + owner + '\'' +
+				", money='" + money + '\'' +
+				", name='" + name + '\'' +
+				", expectedDate='" + expectedDate + '\'' +
+				", customerId='" + customerId + '\'' +
+				", stage='" + stage + '\'' +
+				", type='" + type + '\'' +
+				", source='" + source + '\'' +
+				", activityId='" + activityId + '\'' +
+				", contactsId='" + contactsId + '\'' +
+				", createBy='" + createBy + '\'' +
+				", createTime='" + createTime + '\'' +
+				", editBy='" + editBy + '\'' +
+				", editTime='" + editTime + '\'' +
+				", description='" + description + '\'' +
+				", contactSummary='" + contactSummary + '\'' +
+				", nextContactTime='" + nextContactTime + '\'' +
+				'}';
+	}
 }

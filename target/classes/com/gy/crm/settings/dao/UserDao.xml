@@ -8,4 +8,7 @@
     <select id="queryUser" resultType="User">
         select * from tbl_user
     </select>
+    <select id="getOwnerList" resultType="User">
+        select * from tbl_user
+    </select>
 </mapper>

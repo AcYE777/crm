@@ -3,6 +3,7 @@ package com.gy.crm.workbench.controller;
 import com.gy.crm.settings.entity.User;
 import com.gy.crm.workbench.entity.Activity;
 import com.gy.crm.workbench.entity.Clue;
+import com.gy.crm.workbench.entity.Tran;
 import com.gy.crm.workbench.service.ClueSerivce;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -104,6 +105,34 @@ public class ClueController {
         System.out.println("查询活动Controller");
         List<Activity> list = cs.searchActivityInfo(activityInfo);
         return list;
+    }
+    @RequestMapping(value = "/convert.do",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public ModelAndView convert(HttpServletRequest request) {
+        System.out.println("convertController执行");
+        ModelAndView mav = new ModelAndView();
+        String clueId = request.getParameter("clueId");
+        String hasTran = request.getParameter("hasTran");
+        User user = (User)request.getSession().getAttribute("user");
+        String createBy = user.getName();
+        Tran tran = null;
+        if("hasTran".equals(hasTran)) {
+            //说明用户填写了表单
+            tran = new Tran();
+            tran.setMoney(request.getParameter("money"));
+            tran.setName(request.getParameter("tradeName"));
+            tran.setExpectedDate(request.getParameter("expectedDate"));
+            tran.setStage(request.getParameter("stageName"));
+            tran.setActivityId(request.getParameter("activityId"));
+        }
+        //将参数传递到Service层,clueId,createBy,tran对象
+        boolean flag = cs.convert(clueId,createBy,tran);
+        if(flag) {
+            //进行重定向
+            System.out.println("转换成功");
+            mav.setViewName("redirect:"+"/workbench/clue/index.jsp");
+        }
+        return mav;
     }
 }
 

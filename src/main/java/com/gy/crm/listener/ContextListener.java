@@ -16,10 +16,7 @@ import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ContextListener implements ServletContextListener {
     private DicTypeDao dicTypeDao;
@@ -44,6 +41,17 @@ public class ContextListener implements ServletContextListener {
             application.setAttribute(key+"List",map.get(key));
         }
         System.out.println("application监听器结束");
+        System.out.println("读取stageAndPossibility配置文件开始");
+        ResourceBundle rb = ResourceBundle.getBundle("Stage2Possibility");
+        Map<String,String> pMap = new HashMap<>();
+        Enumeration<String> e = rb.getKeys();
+        while(e.hasMoreElements()) {
+            String key = e.nextElement();
+            String value = rb.getString(key);
+            pMap.put(key,value);
+        }
+        application.setAttribute("pMap",pMap);
+        System.out.println("读取Stage2Possibility配置文件结束");
     }
 
     @Override

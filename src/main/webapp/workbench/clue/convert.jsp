@@ -84,10 +84,10 @@ request.getServerPort()+request.getContextPath()+"/";
 			//绑定复选框为了知道是否创建交易
 			if($("#isCreateTransaction").prop("checked")){
 				//说明需要为客户创建交易，但是用户也可以不填这些内容
-
+				$("#createTran").submit();
 			}else{
 				//说明不需要为客户创建交易
-
+				window.location.href="workbench/clue/convert.do?clueId=${param.clueId}";
 			}
 
 		})
@@ -171,22 +171,25 @@ request.getServerPort()+request.getContextPath()+"/";
 	</div>
 	<div id="create-transaction2" style="position: relative; left: 40px; top: 20px; width: 80%; background-color: #F7F7F7; display: none;" >
 	
-		<form>
+		<form action="workbench/clue/convert.do" method="post" id="createTran">
+			<!--这两个隐藏域主要是用于在用户打上复选框后进行传递线索id和flag给后台知道已经提交表单了-->
+			<input type="hidden" name="clueId" value=${param.clueId}>
+			<input type="hidden" name="hasTran" value="hasTran">
 		  <div class="form-group" style="width: 400px; position: relative; left: 20px;">
 		    <label for="amountOfMoney">金额</label>
-		    <input type="text" class="form-control" id="amountOfMoney">
+		    <input type="text" name="money" class="form-control" id="amountOfMoney">
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
 		    <label for="tradeName">交易名称</label>
-		    <input type="text" class="form-control" id="tradeName" value="动力节点-">
+		    <input type="text" name="tradeName" class="form-control" id="tradeName" value="动力节点-">
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
 		    <label for="expectedClosingDate">预计成交日期</label>
-		    <input type="text" class="form-control time" id="expectedClosingDate" readonly>
+		    <input type="text" name="expectedDate" class="form-control time" id="expectedClosingDate" readonly>
 		  </div>
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
 		    <label for="stage">阶段</label>
-		    <select id="stage"  class="form-control">
+		    <select id="stage" name="stageName" class="form-control">
 		    	<option></option>
 				<c:forEach items="${applicationScope.stageList}" var="a">
 					<option value="${a.value}">${a.text}</option>
@@ -205,7 +208,7 @@ request.getServerPort()+request.getContextPath()+"/";
 		  <div class="form-group" style="width: 400px;position: relative; left: 20px;">
 		    <label for="activity">市场活动源&nbsp;&nbsp;<a href="javascript:void(0);" id="activitySource" style="text-decoration: none;"><span class="glyphicon glyphicon-search"></span></a></label>
 		    <input type="text" class="form-control" id="activity" placeholder="点击上面搜索" readonly>
-			  <input type="hidden" id="actIdHidden">
+			  <input type="hidden" id="actIdHidden" name="activityId">
 		  </div>
 		</form>
 		
