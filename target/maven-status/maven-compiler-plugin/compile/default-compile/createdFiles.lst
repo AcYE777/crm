@@ -1,4 +1,5 @@
 com\gy\crm\workbench\dao\ActivityDao.class
+com\gy\crm\workbench\service\ChartService.class
 com\gy\crm\workbench\entity\ContactsRemark.class
 com\gy\crm\workbench\entity\TranHistory.class
 com\gy\crm\workbench\dao\TranDao.class
@@ -45,8 +46,10 @@ com\gy\crm\workbench\dao\ContactsRemarkDao.class
 com\gy\crm\workbench\service\impl\ClueSerivceImpl.class
 com\gy\crm\workbench\entity\Activity.class
 com\gy\crm\workbench\service\impl\TransactionServiceImpl.class
+com\gy\crm\workbench\service\impl\ChartServiceImpl.class
 com\gy\crm\workbench\entity\ClueRemark.class
 com\gy\crm\workbench\service\ClueSerivce.class
+com\gy\crm\workbench\controller\Chart.class
 com\gy\crm\workbench\dao\ClueDao.class
 com\gy\crm\workbench\service\TransactionService.class
 com\gy\crm\settings\entity\DicType.class
